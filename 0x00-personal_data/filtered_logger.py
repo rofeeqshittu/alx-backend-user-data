@@ -73,6 +73,7 @@ logging.basicConfig(
         level=logging.INFO
         )
 
+
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """
     Establish a connection to the MySQL database using credentials from
