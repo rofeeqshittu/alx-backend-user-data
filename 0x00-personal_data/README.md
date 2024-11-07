@@ -3,6 +3,8 @@
 ## Overview
 This project focuses on handling Personally Identifiable Information (PII) in a secure and compliant way. By implementing filters, encryption, and database authentication, you will gain experience in protecting sensitive data and managing log files. This project emphasizes responsible logging practices and secure access management using environment variables.
 
+![I don't always post info about myself....](i-dont-post-info-about-myself-but-when.png)
+
 ## Concepts
 - **Personally Identifiable Information (PII)**: Understanding and managing sensitive data such as names, email addresses, and social security numbers.
 - **Log Filtering**: Obfuscating sensitive fields within log messages to ensure data security.
