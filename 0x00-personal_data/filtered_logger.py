@@ -7,6 +7,7 @@ import logging
 import re
 import os
 import mysql.connector
+from datetime import datetime
 from typing import List
 
 
@@ -65,6 +66,12 @@ def get_logger() -> logging.Logger:
 
     return logger
 
+
+# Setting up logging format
+logging.basicConfig(
+        format='[HOLBERTON] user_data INFO %(asctime)s,000: %(message)s',
+        level=logging.INFO
+        )
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """
