@@ -5,6 +5,8 @@
 """
 import logging
 import re
+import os
+import mysql.connector
 from typing import List
 
 
@@ -62,3 +64,28 @@ def get_logger() -> logging.Logger:
     logger.addHandler(stream_handler)
 
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    Establish a connection to the MySQL database using credentials from
+    environment variables.
+    Returns a MySQL connection object.
+    """
+    # Retrieve credentials from environment variables, with default values
+    db_username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    db_password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    db_host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    db_name = os.getenv("PERSONAL_DATA_DB_NAME")
+
+    if not db_name:
+        raise ValueError("Database name (PERSONAL_DATA_DB_NAME) is required.")
+
+    # Connect to the database using the credentials
+    db_connection = mysql.connector.connect(
+            user=db_username,
+            password=db_password,
+            host=db_host,
+            database=db_name
+            )
+    return db_connection
