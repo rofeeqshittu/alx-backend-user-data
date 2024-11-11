@@ -40,5 +40,5 @@ def forbidden() -> None:
     """GET /api/v1/forbidden
     Return:
       - Forbidden error.
-      """
-      abort(403)
+    """
+    abort(403)
