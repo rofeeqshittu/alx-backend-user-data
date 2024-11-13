@@ -132,19 +132,21 @@ curl -X POST "http://0.0.0.0:5000/api/v1/auth_session/login" -d "email=user@exam
 # Returns JSON with User info and sets the session cookie
 ```
 
+---
+
 #### 8. Logout
 Filename: `api/v1/views/session_auth.py`
 
 Objective: Create a DELETE route to handle user logout by destroying the session ID cookie.
 
 Requirements:
-Update `SessionAuth` class:
-Add `destroy_session(self, request=None).`
+- Update `SessionAuth` class:
+- Add `destroy_session(self, request=None).`
     - Returns `False` if `request` is `None` or the session cookie is missing.
     - Returns `False` if the session cookie is not linked to any `User ID`.
     - Deletes the session from user_id_by_session_id and returns True.
 - Route: DELETE /auth_session/logout (slash tolerant).
-If `destroy_session` returns `False`, return `404`.
+- If `destroy_session` returns `False`, return `404`.
 
 **Example**
 ```bash
