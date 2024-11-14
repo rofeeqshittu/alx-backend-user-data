@@ -33,7 +33,10 @@ The project consists of multiple files that manage different aspects of session 
 | 6       | [Use Session ID for identifying a User](./api/v1/auth/session_auth.py) | Implement `current_user` method to return the User instance based on session ID.                      |
 | 7       | [New view for Session Authentication](./api/v1/views/session_auth.py) | Add a POST route to handle user login with session authentication.                                      |
 | 8       | [Logout](./api/v1/views/session_auth.py)                | Add a DELETE route to handle user logout by deleting the session ID cookie.                             |
+| 9       | [Expiration](./api/v1/auth/session_exp_auth.py) | Add session expiration functionality to manage session duration and timeouts.                                 |
+| 10      | [Sessions in Database](./api/v1/auth/session_db_auth.py) | Store session information in a persistent file-backed database.                                        |
 
+---
 ---
 
 ### Task Details
@@ -154,4 +157,59 @@ curl -X DELETE "http://0.0.0.0:5000/api/v1/auth_session/logout" -H "Cookie: _my_
 # Logs the user out by removing their session
 ```
 
+---
+
+#### 9. Expiration
+
+**Filename**: `api/v1/auth/session_exp_auth.py`
+
+**Objective**: Add session expiration to the authentication system by inheriting from `SessionAuth`.
+- Create a `SessionExpAuth` class inheriting `SessionAuth`.
+- **`__init__` Method**:
+  - Add `session_duration` from environment variable `SESSION_DURATION`, casting it to an integer. If not present or invalid, set `session_duration` to `0` (unlimited session).
+- **`create_session` Method**:
+  - Call `super()` to create a Session ID.
+  - Store the session data as a dictionary with `user_id` and `created_at` (current datetime) in `user_id_by_session_id`.
+- **`user_id_for_session_id` Method**:
+  - Return `user_id` if `session_duration` is `0` (unlimited).
+  - Return `None` if `created_at` is missing or the session has expired.
+  - Otherwise, return `user_id`.
+
+**Example Usage**:
+
+```bash
+# Run the server with session expiration set to 60 seconds
+bob@dylan:~$ API_HOST=0.0.0.0 API_PORT=5000 AUTH_TYPE=session_exp_auth SESSION_NAME=_my_session_id SESSION_DURATION=60 python3 -m api.v1.app
+Login with session authentication:
+```bash
+curl "http://0.0.0.0:5000/api/v1/auth_session/login" -XPOST -d "email=user@example.com" -d "password=correct_password"
+Access /users/me after a few seconds to see active session and after 60 seconds to confirm timeout.
+```
+
+---
+
+#### 10. Sessions in Database
+Filename: `api/v1/auth/session_db_auth.py`
+
+Objective: Store session data in a persistent file-based database so session data is retained if the server restarts.
+
+UserSession Model: Define models/user_session.py to inherit Base with attributes:
+user_id: Unique identifier for the user.
+session_id: Unique identifier for the session.
+SessionDBAuth Class:
+Inherit SessionExpAuth.
+create_session:
+Calls super() to create a Session ID.
+Stores each session as a new instance of UserSession saved in the file database.
+user_id_for_session_id:
+Retrieves User ID by querying the UserSession instances stored in the database.
+destroy_session:
+Deletes the UserSession instance for a given session ID.
+Example Usage:
+
+```bash
+# Start server with database-backed session
+bob@dylan:~$ API_HOST=0.0.0.0 API_PORT=5000 AUTH_TYPE=session_db_auth SESSION_NAME=_my_session_id SESSION_DURATION=60 python3 -m api.v1.app
+```
+---
 ---
