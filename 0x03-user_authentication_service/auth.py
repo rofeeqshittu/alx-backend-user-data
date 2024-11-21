@@ -33,7 +33,8 @@ def _generate_uuid() -> str:
 
 class Auth:
     """Auth class to interact with the authentication database.
-    Provides methods for registering users, validating logins, managing sessions,
+    Provides methods for registering users, validating logins, managing
+    sessions,
     and handling password resets.
     """
 
@@ -78,7 +79,8 @@ class Auth:
             # Try to find the user by email
             user = self._db.find_user_by(email=email)
             if user is not None:
-                # Check if the entered password matches the hashed password in the database
+                # Check if the entered password matches the
+                # hashed password in the database
                 return bcrypt.checkpw(
                     password.encode("utf-8"),
                     user.hashed_password,
@@ -88,7 +90,8 @@ class Auth:
         return False
 
     def create_session(self, email: str) -> str:
-        """Creates a new session for a user and stores the session ID in the database.
+        """Creates a new session for a user and stores the session ID
+        in the database.
 
         Args:
             email (str): The email of the user.
@@ -130,7 +133,8 @@ class Auth:
         return user
 
     def destroy_session(self, user_id: int) -> None:
-        """Destroys a session for a given user by setting the session ID to None.
+        """Destroys a session for a given user by setting the session ID
+        to None.
 
         Args:
             user_id (int): The ID of the user whose session is to be destroyed.
