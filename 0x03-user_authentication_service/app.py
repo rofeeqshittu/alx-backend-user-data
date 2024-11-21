@@ -99,7 +99,8 @@ def profile() -> str:
 @app.route("/reset_password", methods=["POST"], strict_slashes=False)
 def get_reset_password_token() -> str:
     """POST /reset_password
-    Initiates the password reset process by sending a reset token to the user's email.
+    Initiates the password reset process by sending a reset token to
+    the user's email.
     If the email is valid, generates and returns a reset token.
     If the email is invalid, returns a 403 error.
     Return:
