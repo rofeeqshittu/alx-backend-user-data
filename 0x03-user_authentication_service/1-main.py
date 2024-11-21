@@ -11,24 +11,15 @@ from sqlalchemy.orm.exc import NoResultFound
 
 my_db = DB()
 
-# Add a user to test the 'find_user_by' method
-user = my_db.add_user("test@test.com", "PwdHashed")
+# Add a user to test the 'update_user' method
+email = 'test@test.com'
+hashed_password = "hashedPwd"
+user = my_db.add_user(email, hashed_password)
 print(f"User ID: {user.id}")
 
-# Find the user by email
-find_user = my_db.find_user_by(email="test@test.com")
-print(f"Found User ID: {find_user.id}")
-
-# Test case where user is not found
+# Update the user's password
 try:
-    find_user = my_db.find_user_by(email="test2@test.com")
-    print(f"Found User ID: {find_user.id}")
-except NoResultFound:
-    print("Not found")
-
-# Test case where an invalid query is made
-try:
-    find_user = my_db.find_user_by(no_email="test@test.com")
-    print(f"Found User ID: {find_user.id}")
-except InvalidRequestError:
-    print("Invalid")
+    my_db.update_user(user.id, hashed_password='NewPwd')
+    print("Password updated")
+except ValueError:
+    print("Error")

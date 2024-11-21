@@ -71,3 +71,31 @@ class DB:
         except InvalidRequestError:
             # Raise InvalidRequestError if the query is invalid
             raise InvalidRequestError("Invalid query arguments.")
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        Update an existing user's attributes in the database.
+
+        Args:
+            user_id (int): The user's ID.
+            **kwargs: Arbitrary keyword arguments for user attributes
+            (e.g., hashed_password="newPwd").
+
+        Raises:
+            ValueError: If an invalid user attribute is passed.
+        """
+        user = self.find_user_by(id=user_id)
+
+        # List of valid user attributes
+        valid_attributes = ['email', 'hashed_password',
+                            'session_id', 'reset_token']
+
+        for key, value in kwargs.items():
+            # Check if the key is a valid user attribute
+            if key not in valid_attributes:
+                raise ValueError(f"Invalid attribute: {key}")
+            # Update the user attribute
+            setattr(user, key, value)
+
+        # Commit changes to the database
+        self._session.commit()
