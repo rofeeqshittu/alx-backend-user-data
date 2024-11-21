@@ -6,7 +6,7 @@ This project involves implementing a user authentication service using Python, F
 
 The application is designed to simulate a full-fledged user authentication backend, complete with database integration, password security, and session handling.
 
-#[User-authentication-service](user-auth-service.jpg)
+![User-authentication-service](user-auth-service.jpg)
 
 ## Concepts
 
