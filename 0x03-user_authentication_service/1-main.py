@@ -3,13 +3,32 @@
 Main file
 """
 from db import DB
+from user import User
+
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+
 
 my_db = DB()
 
-# Add the first user
-user_1 = my_db.add_user("test@test.com", "SuperHashedPwd")
-print(f"User 1 ID: {user_1.id}")
+# Add a user to test the 'find_user_by' method
+user = my_db.add_user("test@test.com", "PwdHashed")
+print(f"User ID: {user.id}")
 
-# Add the second user
-user_2 = my_db.add_user("test1@test.com", "SuperHashedPwd1")
-print(f"User 2 ID: {user_2.id}")
+# Find the user by email
+find_user = my_db.find_user_by(email="test@test.com")
+print(f"Found User ID: {find_user.id}")
+
+# Test case where user is not found
+try:
+    find_user = my_db.find_user_by(email="test2@test.com")
+    print(f"Found User ID: {find_user.id}")
+except NoResultFound:
+    print("Not found")
+
+# Test case where an invalid query is made
+try:
+    find_user = my_db.find_user_by(no_email="test@test.com")
+    print(f"Found User ID: {find_user.id}")
+except InvalidRequestError:
+    print("Invalid")
