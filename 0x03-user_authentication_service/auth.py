@@ -7,7 +7,7 @@ import bcrypt
 import uuid
 from db import DB
 from user import User
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound, InvalidRequestError
 
 
 class Auth:
@@ -24,7 +24,7 @@ class Auth:
             user = self._db.find_user_by(email=email)
             raise ValueError(f"User {email} already exists")
         except NoResultFound:
-            # Hash the password and create new user
+            # Hash the password and create a new user
             hashed_password = self._hash_password(password)
             return self._db.add_user(email, hashed_password)
 
@@ -38,6 +38,9 @@ class Auth:
                 return True
         except NoResultFound:
             # No user found with that email
+            return False
+        except InvalidRequestError:
+            # If an invalid request is made to the database
             return False
         return False
 
